@@ -1,6 +1,7 @@
 package github.senasaulo.imageliteapi.application.images;
 
 import java.io.IOException;
+import java.net.URI;
 import java.util.List;
 
 import org.springframework.http.MediaType;
@@ -10,9 +11,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import github.senasaulo.imageliteapi.domain.entity.Image;
-import github.senasaulo.imageliteapi.domain.enums.ImageExtension;
 import github.senasaulo.imageliteapi.domain.service.ImageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 public class ImagesController {
 	
 	private final ImageService service;
+	private final ImageMapper mapper;
 	
 	@PostMapping
 	public ResponseEntity<Void> save(
@@ -39,18 +41,18 @@ public class ImagesController {
 		log.info("Media Type {}", MediaType.valueOf(file.getContentType()));
 
 		
-		Image image = Image.builder()
-				.name(name)
-				.extension(ImageExtension.valueOf(MediaType.valueOf(file.getContentType())))
-				.tags(String.join(",", tags))
-				.size(file.getSize())
-				.file(file.getBytes())
-				.build();
+		Image image = mapper.mapToImage(file, name,tags);
+		Image savedImage = service.save(image);
+		URI imageUri = buildImageUri(savedImage);
 
-		service.save(image);
-
-		return ResponseEntity.ok().build();
+		return ResponseEntity.created(imageUri).build();
 	}
 	
-
+	private URI buildImageUri(Image image) {
+		String uriString = "/" + image.getId();
+		return ServletUriComponentsBuilder.fromCurrentRequest()
+				.path(uriString)
+				.build()
+				.toUri();
+	}
 }
