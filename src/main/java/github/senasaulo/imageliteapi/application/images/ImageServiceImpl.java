@@ -1,5 +1,7 @@
 package github.senasaulo.imageliteapi.application.images;
 
+import java.util.Optional;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,8 +23,8 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
-    public Image findById(String id) {
-        return repository.findById(id).orElse(null);
+    public Optional<Image> findById(String id) {
+        return repository.findById(id);
     }
 
     

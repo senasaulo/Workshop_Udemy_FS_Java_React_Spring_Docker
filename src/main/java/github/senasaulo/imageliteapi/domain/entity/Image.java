@@ -47,4 +47,8 @@ public class Image {
     @Column
     @Lob
     private byte[] file;
+
+    public String getFileName() {
+        return name + "." + extension.name();
+    }
 }
