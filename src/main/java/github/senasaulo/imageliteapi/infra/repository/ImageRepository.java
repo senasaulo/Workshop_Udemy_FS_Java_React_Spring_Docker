@@ -1,5 +1,10 @@
 package github.senasaulo.imageliteapi.infra.repository;
 
+import static github.senasaulo.imageliteapi.infra.repository.specs.GenericSpecs.conjunction;
+import static github.senasaulo.imageliteapi.infra.repository.specs.ImageSpecs.*;
+import static org.springframework.data.jpa.domain.Specification.anyOf;
+import static org.springframework.data.jpa.domain.Specification.where;
+
 import java.util.List;
 
 import org.springframework.data.jpa.domain.Specification;
@@ -14,19 +19,16 @@ public interface ImageRepository extends JpaRepository<Image, String>, JpaSpecif
 
     default List<Image> finbByExtensionAndNameOrTags(ImageExtension extension, String query) {
 
-        Specification<Image> conjunction =(root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.conjunction();
-        Specification<Image> spec = Specification.where(conjunction);
+        Specification<Image> spec = where(conjunction());
+
         if (extension != null) {
-            spec = spec.and((root, criteriaQuery, criteriaBuilder) -> 
-                    criteriaBuilder.equal((root.get("extension")), extension));
+            spec = spec.and(extesionEqual(extension));
         }
         if (StringUtils.hasText(query)) {
-            spec = spec.and((root, criteriaQuery, criteriaBuilder) -> 
-                    criteriaBuilder.or(criteriaBuilder.like(criteriaBuilder.lower(root.get("name")), "%" + query.toLowerCase() + "%"),
-                    criteriaBuilder.like(criteriaBuilder.lower(root.get("tags")), "%" + query.toLowerCase() + "%")
-            ));
+            spec = spec.and(anyOf(nameEqual(query),tagsEqual(query)));
         }
 
         return findAll(spec);
     }
+
 }
