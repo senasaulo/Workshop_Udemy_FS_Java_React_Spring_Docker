@@ -28,7 +28,7 @@ public class ImageMapper {
                 .name(image.getName())
                 .extension(image.getExtension().name())
                 .size(image.getSize())
-                .uploadeDate(image.getUploadDate())
+                .uploadDate(image.getUploadDate())
                 .url(url)
                 .build();
     }

@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "imagelite"
+		},
+		{
+			"path": "imageliteapi"
+		}
+	],
+	"settings": {
+		"workbench.colorTheme": "Visual Studio Dark",
+		"java.compile.nullAnalysis.mode": "automatic"
+	}
+}
