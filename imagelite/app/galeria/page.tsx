@@ -10,11 +10,14 @@ export default function Galeria() {
   const [images, setImages] = useState<ImageDTO[]>([]);
   const [query, setQuery] = useState<string>("");
   const [extension, setExtension] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
 
   async function serchImages() {
+    setLoading(true);
     const result = await useImageService().buscar(query, extension);
     setImages(result);
     console.table(result);
+    setLoading(false);
   }
 
   function renderImageCard(image: ImageDTO) {
@@ -23,7 +26,8 @@ export default function Galeria() {
                   imageUrl={image.url} 
                   name={image.name} 
                   size={image.size} 
-                  uploadDate={image.uploadDate} />
+                  uploadDate={image.uploadDate}
+                  extension={image.extension} />
     );
   }
 
@@ -34,7 +38,7 @@ export default function Galeria() {
   return (
       <div >
         <main >
-          <Template>
+          <Template loading={loading}>
             <section className="flex flex-col items-center justify-center my-5">
                 <div className="flex space-x-4 ">
                     <input type="text"                     
@@ -46,8 +50,8 @@ export default function Galeria() {
                       <option value="PNG">PNG</option>
                       <option value="GIF">GIF</option>
                     </select>
-                    <button className="bg-blue-500 text-white px-4 py-2 rounded-lg" onClick={serchImages}>Search</button>
-                    <button className="bg-green-500 text-white px-4 py-2 rounded-lg">Add New</button>
+                    <button className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-300" onClick={serchImages}>Search</button>
+                    <button className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-300">Add New</button>
                 </div>
             </section>
             <section className="grid grid-cols-4 gap-8">
