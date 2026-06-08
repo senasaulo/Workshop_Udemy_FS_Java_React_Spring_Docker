@@ -1,6 +1,6 @@
 'use client'
 
-import{Template , ImageCard , Button , InputText} from '@/components'
+import{Template , ImageCard , Button , InputText,UseNotification} from '@/components'
 import {ImageDTO} from '@/resources/image/image.resources'
 import {useImageService} from '@/resources/image/image.service'
 import {useState} from 'react'
@@ -8,6 +8,7 @@ import Link from 'next/link'
 
 export default function Galeria() {
   const imageService = useImageService();
+  const notification = UseNotification();
   const [images, setImages] = useState<ImageDTO[]>([]);
   const [query, setQuery] = useState<string>("");
   const [extension, setExtension] = useState<string>("");
@@ -19,6 +20,10 @@ export default function Galeria() {
     setImages(result);
     console.table(result);
     setLoading(false);
+
+    if(!result.length) {
+      notification.notify("No results found!", "warning");
+    }
   }
 
   function renderImageCard(image: ImageDTO) {
@@ -45,9 +50,10 @@ export default function Galeria() {
                     <InputText  placeholder="Type Name or Tags"
                                 textColor="text-gray-500"
                                 placeholderColor="placeholder:text-gray-200"
+                                value={query}
                                 onChange={event => setQuery(event.target.value)}
                     />
-                    <select className="border px-4 py-2 rounded-lg text-gray-900" onChange={event => setExtension(event.target.value)}>
+                    <select className="border px-4 py-2 rounded-lg text-gray-900" value={extension} onChange={event => setExtension(event.target.value)}>
                       <option value="">All Formats</option>
                       <option value="JPEG">JPEG</option>
                       <option value="PNG">PNG</option>

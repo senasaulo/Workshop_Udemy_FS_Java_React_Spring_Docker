@@ -1,6 +1,7 @@
 import {Header} from "./Header";
 import {Footer} from "./Footer";
 import {Loading} from "./loading";
+import {ContNotification} from "./contNotification";
 
 interface TemplateProps {
     children: React.ReactNode;
@@ -17,6 +18,7 @@ export const Template: React.FC<TemplateProps> = ({children, loading}: TemplateP
                     {!loading && children}
                 </div>
             <Footer/>
+            <ContNotification/>
         </>
     )
 }

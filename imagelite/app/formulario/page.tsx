@@ -1,6 +1,7 @@
 'use client'
 
-import { InputText, Template , Button, RenderIf } from '@/components';
+import { InputText, Template , Button, RenderIf , UseNotification } from '@/components';
+import { useImageService } from '@/resources/image/image.service';
 import Link from 'next/link';
 import { useFormik } from 'formik';
 import * as Yup from 'yup'; 
@@ -21,13 +22,32 @@ const formScheme: FormProps = {
 export default function FormularioPage() {
 
     const [imagePreview, setImagePreview] = useState<string>();
+    const service = useImageService();
+    const notification = UseNotification();
+    const [loading, setLoading] = useState<boolean>(false);
 
     const formik = useFormik({
         initialValues: formScheme,
-        onSubmit: (values : FormProps) => {
-            console.log(values);
-        }
+        onSubmit: handleSubmit
     })
+
+    async function handleSubmit(dados: FormProps) {
+        setLoading(true);
+        const formData = new FormData();
+        formData.append("name", dados.name);
+        formData.append("tags", dados.tags);
+        formData.append("file", dados.file);
+
+        await service.salvar(formData);
+
+        formik.resetForm();
+        setImagePreview('');
+        setLoading(false);
+
+        notification.notify("Image uploaded successfully!", "success");
+    }
+
+
 
     function onFileUpload(event: React.ChangeEvent<HTMLInputElement>) {
        if (event.target.files ) { 
@@ -37,17 +57,17 @@ export default function FormularioPage() {
        }
     }   
     return(
-        <Template>
+        <Template loading={loading}>
             <section className="flex flex-col items-center justify-center my-5">
                 <h5 className = "mt-3 mb-10 text-3x1 font-extrabold tracking-tight text-gray-800">Upload de Imagem</h5>
-                <form onSubmit={formik.handleSubmit} className="w-full max-w-md bg-white p-8 rounded-lg shadow-md">
+                <form  onSubmit={formik.handleSubmit} className="w-full max-w-md bg-white p-8 rounded-lg shadow-md">
                     <div className="grid grid-cols-1">
                         <label className="block text-sm font-medium  leading-6 text-gray-600" >Name :*</label>
-                        <InputText id="name"  onChange={formik.handleChange} placeholder="Image Name" textColor="text-gray-500" placeholderColor="placeholder:text-gray-200" />
+                        <InputText id="name" value={formik.values.name} onChange={formik.handleChange} placeholder="Image Name" textColor="text-gray-500" placeholderColor="placeholder:text-gray-200" />
                     </div>
                     <div className=" mt-5 grid grid-cols-1">
                         <label className="block text-sm font-medium leading-6 text-gray-600" >Tags :*</label>
-                        <InputText id="tags" onChange={formik.handleChange} placeholder="Image Tags comma separated" textColor="text-gray-500" placeholderColor="placeholder:text-gray-200" />
+                        <InputText id="tags" value={formik.values.tags} onChange={formik.handleChange} placeholder="Image Tags comma separated" textColor="text-gray-500" placeholderColor="placeholder:text-gray-200" />
                     </div>
                     <div className=" mt-5 grid grid-cols-1">
                         <label className="block text-sm font-medium  leading-6 text-gray-600" >Image :*</label>
