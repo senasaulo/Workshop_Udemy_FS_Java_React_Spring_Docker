@@ -1,23 +1,12 @@
 'use client'
 
-import { InputText, Template , Button, RenderIf , UseNotification } from '@/components';
+import { InputText, Template , Button, RenderIf , UseNotification, FieldError} from '@/components';
 import { useImageService } from '@/resources/image/image.service';
-import Link from 'next/link';
 import { useFormik } from 'formik';
-import * as Yup from 'yup'; 
 import { useState } from 'react';
+import { FormProps , FormScheme , FormValidationSchema } from './formScheme';
+import Link from 'next/link';
 
-interface FormProps {
-    name: string;
-    tags: string;
-    file: any;
-}
-
-const formScheme: FormProps = {
-    name: '',
-    tags: '',
-    file: ''
-}
 
 export default function FormularioPage() {
 
@@ -27,11 +16,12 @@ export default function FormularioPage() {
     const [loading, setLoading] = useState<boolean>(false);
 
     const formik = useFormik({
-        initialValues: formScheme,
-        onSubmit: handleSubmit
+        initialValues: FormScheme,
+        onSubmit: HandleSubmit,
+        validationSchema : FormValidationSchema
     })
 
-    async function handleSubmit(dados: FormProps) {
+    async function HandleSubmit(dados: FormProps) {
         setLoading(true);
         const formData = new FormData();
         formData.append("name", dados.name);
@@ -63,11 +53,22 @@ export default function FormularioPage() {
                 <form  onSubmit={formik.handleSubmit} className="w-full max-w-md bg-white p-8 rounded-lg shadow-md">
                     <div className="grid grid-cols-1">
                         <label className="block text-sm font-medium  leading-6 text-gray-600" >Name :*</label>
-                        <InputText id="name" value={formik.values.name} onChange={formik.handleChange} placeholder="Image Name" textColor="text-gray-500" placeholderColor="placeholder:text-gray-200" />
+                        <InputText  id="name" value={formik.values.name} 
+                                    onChange={formik.handleChange} 
+                                    placeholder="Image Name" 
+                                    textColor="text-gray-500" 
+                                    placeholderColor="placeholder:text-gray-200" />
+                        <FieldError error={(formik.submitCount > 0 || formik.touched.name || (formik.values.name?.length > 50)) ? formik.errors.name : null} />
                     </div>
                     <div className=" mt-5 grid grid-cols-1">
                         <label className="block text-sm font-medium leading-6 text-gray-600" >Tags :*</label>
-                        <InputText id="tags" value={formik.values.tags} onChange={formik.handleChange} placeholder="Image Tags comma separated" textColor="text-gray-500" placeholderColor="placeholder:text-gray-200" />
+                        <InputText  id="tags" 
+                                    value={formik.values.tags} 
+                                    onChange={formik.handleChange} 
+                                    placeholder="Image Tags comma separated" 
+                                    textColor="text-gray-500" 
+                                    placeholderColor="placeholder:text-gray-200" />
+                        <FieldError error={(formik.submitCount > 0 || formik.touched.tags || (formik.values.tags?.length > 50)) ? formik.errors.tags : null} />
                     </div>
                     <div className=" mt-5 grid grid-cols-1">
                         <label className="block text-sm font-medium  leading-6 text-gray-600" >Image :*</label>
@@ -90,10 +91,12 @@ export default function FormularioPage() {
                                         </RenderIf>
                                         <input onChange={onFileUpload} type="file" className="sr-only" />
                                     </label>
+                                    
                                 </div>
                                 <RenderIf condition={!imagePreview}>
                                      <p className="text-xs leading-5 text-gray-600">PNG, JPG, GIF up to 10MB</p>
                                 </RenderIf>
+                                <FieldError error={(formik.submitCount > 0 || formik.touched.file) ? formik.errors.file : null} />
                             </div>
                         </div>
                     </div>
