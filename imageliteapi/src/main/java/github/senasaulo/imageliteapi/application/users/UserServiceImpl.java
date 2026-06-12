@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import github.senasaulo.imageliteapi.application.jwt.JwtService;
-import github.senasaulo.imageliteapi.domain.AcessToken;
+import github.senasaulo.imageliteapi.domain.AccessToken;
 import github.senasaulo.imageliteapi.domain.entity.User;
 import github.senasaulo.imageliteapi.domain.exception.DuplicatedTupleException;
 import github.senasaulo.imageliteapi.domain.service.UserService;
@@ -34,12 +34,12 @@ public class UserServiceImpl implements UserService {
         if (possibleUser != null) {
             throw new DuplicatedTupleException("User  already exists.");
         }
-        encondePassword(user);
+        encodePassword(user);
         return userRepository.save(user);
     }
 
     @Override
-    public AcessToken authenticate(String email, String password) {
+    public AccessToken authenticate(String email, String password) {
         var user = getByEmail(email);
         if (user == null) {
             return null;
@@ -50,7 +50,7 @@ public class UserServiceImpl implements UserService {
         return jwtService.generateToken(user);
     }
 
-    private void encondePassword(User user) {
+    private void encodePassword(User user) {
         String rawPassword = user.getPassword();
         String encodedPassword = passwordEncoder.encode(rawPassword);
         user.setPassword(encodedPassword);

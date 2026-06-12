@@ -8,7 +8,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
-import github.senasaulo.imageliteapi.domain.AcessToken;
+import github.senasaulo.imageliteapi.domain.AccessToken;
 import github.senasaulo.imageliteapi.domain.entity.User;
 import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +20,7 @@ public class JwtService {
 
     private final SecretKeyGeneration KeyGeneration;
 
-    public AcessToken generateToken(User user) {   
+    public AccessToken generateToken(User user) {   
         
         var key = KeyGeneration.getKey();
         var expirationDate = generateExpirationDate();
@@ -35,7 +35,7 @@ public class JwtService {
                         .compact();
                
 
-        return new AcessToken(token);
+        return new AccessToken(token);
     }
 
     private Date generateExpirationDate() {
