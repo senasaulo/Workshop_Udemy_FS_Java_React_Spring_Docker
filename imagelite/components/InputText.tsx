@@ -8,11 +8,13 @@ interface InputTextProps {
    textColor?: string;
    id?: string;
    value?: string;
+   type?: string;
 }
 
-export const InputText: React.FC<InputTextProps> = ({ style, onChange, placeholder, placeholderColor = 'text-gray-300', textColor = 'text-gray-500', id, value }) => {
+export const InputText: React.FC<InputTextProps> = 
+            ({ style, onChange, placeholder, placeholderColor = 'text-gray-300', textColor = 'text-gray-500', id, value, type="text" }) => {
     return (
-        <input type="text" 
+        <input type={type} 
             id={id}
             onChange={onChange}
             className={` ${style} border rounded-lg px-4 py-2 ${textColor} ${placeholderColor}`} 
