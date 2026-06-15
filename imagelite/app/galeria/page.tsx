@@ -2,7 +2,7 @@
 
 import{Template , ImageCard , Button , InputText,UseNotification} from '@/components'
 import {ImageDTO} from '@/resources/image/image.resources'
-import {useImageService} from '@/resources/image/image.service'
+import {useImageService} from '@/resources'
 import {useState} from 'react'
 import Link from 'next/link'
 

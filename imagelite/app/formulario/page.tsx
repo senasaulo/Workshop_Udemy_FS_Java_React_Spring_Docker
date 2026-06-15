@@ -1,10 +1,10 @@
 'use client'
 
 import { InputText, Template , Button, RenderIf , UseNotification, FieldError} from '@/components';
-import { useImageService } from '@/resources/image/image.service';
+import { useImageService } from '@/resources';
+import { FormProps , FormScheme , FormValidationSchema } from './formScheme';
 import { useFormik } from 'formik';
 import { useState } from 'react';
-import { FormProps , FormScheme , FormValidationSchema } from './formScheme';
 import Link from 'next/link';
 
 
@@ -37,8 +37,6 @@ export default function FormularioPage() {
         notification.notify("Image uploaded successfully!", "success");
     }
 
-
-
     function onFileUpload(event: React.ChangeEvent<HTMLInputElement>) {
        if (event.target.files ) { 
         const file = event.target.files?.[0]
@@ -46,6 +44,7 @@ export default function FormularioPage() {
         setImagePreview(URL.createObjectURL(file))
        }
     }   
+
     return(
         <Template loading={loading}>
             <section className="flex flex-col items-center justify-center my-5">

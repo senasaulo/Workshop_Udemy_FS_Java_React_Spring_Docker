@@ -8,8 +8,9 @@
 		}
 	],
 	"settings": {
-		"workbench.colorTheme": "Visual Studio Dark",
+		"workbench.colorTheme": "Dark Modern",
 		"java.compile.nullAnalysis.mode": "automatic",
-		"java.configuration.updateBuildConfiguration": "interactive"
+		"java.configuration.updateBuildConfiguration": "interactive",
+		"workbench.preferredDarkColorTheme": "Dark Modern"
 	}
 }

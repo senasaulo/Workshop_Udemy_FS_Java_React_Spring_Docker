@@ -1,12 +1,50 @@
 'use client'
 
-import { Template, RenderIf , InputText , Button } from "@/components"
+import { Template, RenderIf , InputText , Button , FieldError, UseNotification } from "@/components"
+import { LoginForm , validationScheme , formScheme} from "./formScheme"
+import { useAuth , Credentials, AccessToken , UserDTO } from "@/resources"
 import { useState } from "react"
-
+import { useFormik } from 'formik'
+import { useRouter } from "next/navigation"
 export default function Login(){
 
     const [loading , setLoading] = useState<boolean>(false);
     const [newUserState, setNewUserState] = useState<boolean>(false);
+    const auth = useAuth();
+    const notification = UseNotification();
+    const router = useRouter();
+
+    const formik = useFormik<LoginForm>({
+        initialValues: formScheme,
+        validationSchema: validationScheme,
+        onSubmit: onSubmit
+    })
+
+    async function onSubmit(values:LoginForm) {
+        if(!newUserState){
+            const credentials: Credentials = { email: values.email,password: values.password}
+            try{
+                const acessToken: AccessToken = await auth.authenticate(credentials)
+                router.push("/galeria")
+            } catch (error:any) {
+                const message = error?.message;
+                notification.notify(message,"error")
+            }
+        } else {
+            const user : UserDTO = { email: values.email, name: values.name , password: values.password}
+            try{
+                await auth.save(user)
+                notification.notify("Seccess on saving user!", "success")
+                formik.resetForm();
+                setNewUserState(false)
+            } catch (error:any) {
+                const message = error?.message;
+                notification.notify(message,"error")
+            }
+        }
+
+        
+    }
 
     return(
         <Template loading ={loading}>
@@ -19,7 +57,7 @@ export default function Login(){
                 </div>
 
                 <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-                    <form className="space-y-2 ">
+                    <form onSubmit={formik.handleSubmit} className="space-y-2 ">
                         <RenderIf condition={newUserState}>
                             <div>
                                 <label className="block text-sm font-medium leading-6 text-gray-900" >Name: </label>
@@ -30,7 +68,10 @@ export default function Login(){
                                     id="name" 
                                     placeholder="Name" 
                                     textColor="text-gray-500" 
-                                    placeholderColor="placeholder:text-gray-200" />
+                                    placeholderColor="placeholder:text-gray-200"
+                                    value={formik.values.name}
+                                    onChange={formik.handleChange} />
+                                <FieldError error = {formik.errors.name}/>    
                             </div>
                         </RenderIf>
                             <div>
@@ -42,7 +83,10 @@ export default function Login(){
                                         id="email" 
                                         placeholder="user@email.com" 
                                         textColor="text-gray-500" 
-                                        placeholderColor="placeholder:text-gray-200" />
+                                        placeholderColor="placeholder:text-gray-200" 
+                                        value={formik.values.email}
+                                        onChange={formik.handleChange}/>
+                                    <FieldError error = {formik.errors.email}/>     
                             </div>
                            <div>
                                     <label className="block text-sm font-medium leading-6 text-gray-900" >Password: </label>
@@ -54,9 +98,12 @@ export default function Login(){
                                         id="password" 
                                         placeholder="Password123" 
                                         textColor="text-gray-500" 
-                                        placeholderColor="placeholder:text-gray-200" />
+                                        placeholderColor="placeholder:text-gray-200" 
+                                        value={formik.values.password}
+                                        onChange={formik.handleChange}/>
+                                    <FieldError error = {formik.errors.password}/>     
                             </div>
-                            <RenderIf>
+                            <RenderIf condition={newUserState}>
                                 <div>
                                         <label className="block text-sm font-medium leading-6 text-gray-900" >Repeat Password: </label>
                                 </div>
@@ -67,7 +114,10 @@ export default function Login(){
                                             id="passwordMatch" 
                                             placeholder="Password123" 
                                             textColor="text-gray-500" 
-                                            placeholderColor="placeholder:text-gray-200" />
+                                            placeholderColor="placeholder:text-gray-200" 
+                                            value={formik.values.passwordMatch}
+                                            onChange={formik.handleChange}/>
+                                        <FieldError error = {formik.errors.passwordMatch}/>        
                                 </div>
                             </RenderIf>
                             
