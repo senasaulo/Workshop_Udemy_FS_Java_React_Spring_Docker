@@ -22,9 +22,10 @@ export default function Login(){
 
     async function onSubmit(values:LoginForm) {
         if(!newUserState){
-            const credentials: Credentials = { email: values.email,password: values.password}
+            const credentials: Credentials = { email: values.email, password: values.password}
             try{
-                const acessToken: AccessToken = await auth.authenticate(credentials)
+                const accessToken: AccessToken = await auth.authenticate(credentials)
+                auth.initSession(accessToken)
                 router.push("/galeria")
             } catch (error:any) {
                 const message = error?.message;

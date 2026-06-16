@@ -16,7 +16,7 @@ export const validationScheme = Yup.object().shape({
 })
 
 export const formScheme: LoginForm = {
-    name: '',
+    name: 'user',
     email: '',
     password: '', 
     passwordMatch: ''
