@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import github.senasaulo.imageliteapi.domain.AccessToken;
 import github.senasaulo.imageliteapi.domain.entity.User;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
 import lombok.var;
@@ -49,5 +50,18 @@ public class JwtService {
         Map<String, Object> claims = new HashMap<>();
         claims.put("name", user.getName());
         return claims;
+    }
+
+    public String getEmailFromToken(String tokenJwt){
+        try{
+        return  Jwts.parser()
+                    .verifyWith(KeyGeneration.getKey())
+                    .build()
+                    .parseSignedClaims(tokenJwt)
+                    .getPayload()
+                    .getSubject();
+        }catch (JwtException e){
+            throw new InvalidTokenException(e.getMessage());
+        }            
     }
 }
