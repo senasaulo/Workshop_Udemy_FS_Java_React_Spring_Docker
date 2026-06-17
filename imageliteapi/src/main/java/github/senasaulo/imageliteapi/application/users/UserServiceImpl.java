@@ -48,6 +48,7 @@ public class UserServiceImpl implements UserService {
             return null;
         }
         return jwtService.generateToken(user);
+    
     }
 
     private void encodePassword(User user) {
