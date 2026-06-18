@@ -42,22 +42,22 @@ export default function Galeria() {
   }
 
   return (
-      <AuthenticatedPage>
-        <Template loading={loading}>
+    <AuthenticatedPage>
+      <Template loading={loading}>
           <section className="flex flex-col items-center justify-center my-5">
-                <div className="flex space-x-4 ">
+              <div className="flex space-x-4 ">
                   <InputText  placeholder="Type Name or Tags"
                                   textColor="text-gray-500"
                                   placeholderColor="placeholder:text-gray-200"
                                   value={query}
                                   onChange={event => setQuery(event.target.value)}
                   />
-                    <select className="border px-4 py-2 rounded-lg text-gray-900" value={extension} onChange={event => setExtension(event.target.value)}>
+                  <select className="border px-4 py-2 rounded-lg text-gray-900" value={extension} onChange={event => setExtension(event.target.value)}>
                       <option value="">All Formats</option>
                       <option value="JPEG">JPEG</option>
                       <option value="PNG">PNG</option>
                       <option value="GIF">GIF</option>
-                    </select>
+                  </select>
                   <Button color="bg-blue-500 hover:bg-blue-300" label="Search" onClick={serchImages} />
                   <Link href="/formulario">
                           <Button color="bg-green-500 hover:bg-green-300" label="Add New" />
@@ -67,7 +67,7 @@ export default function Galeria() {
           <section className="grid grid-cols-4 gap-8">
                 {renderImageCards()}
           </section>   
-        </Template>
+      </Template>
     </AuthenticatedPage>
   )
 }
