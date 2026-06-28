@@ -5,6 +5,9 @@
 		},
 		{
 			"path": "imageliteapi"
+		},
+		{
+			"path": "imagelite_docker_db"
 		}
 	],
 	"settings": {

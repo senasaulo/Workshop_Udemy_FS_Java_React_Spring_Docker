@@ -1,0 +1,4 @@
+data/base/
+data/global/
+data/pg_wal/
+data/pg_xact/
