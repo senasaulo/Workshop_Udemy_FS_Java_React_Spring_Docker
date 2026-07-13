@@ -13,7 +13,6 @@ import github.senasaulo.imageliteapi.domain.entity.User;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
-import lombok.var;
 
 @Service
 @RequiredArgsConstructor

@@ -3,9 +3,9 @@ package github.senasaulo.imageliteapi.application.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -17,7 +17,6 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import github.senasaulo.imageliteapi.application.config.filter.JwtFilter;
 import github.senasaulo.imageliteapi.application.jwt.JwtService;
 import github.senasaulo.imageliteapi.domain.service.UserService;
-import org.springframework.security.config.Customizer;
 
 @Configuration
 @EnableWebSecurity
@@ -36,7 +35,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtFilter jwtFilter)throws Exception {
     
-        return  http.csrf(AbstractHttpConfigurer::disable)
+        return  http.csrf(csrf -> csrf.disable())
                     .cors(Customizer.withDefaults())
                     .authorizeHttpRequests(auth -> {
                         auth.requestMatchers("/v1/users/**").permitAll();
